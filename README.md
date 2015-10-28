@@ -1,13 +1,14 @@
+Гильманов Хасан
 
 Программа подготовки Java Junior Developer  
 80 hr. course + 24 hr. project = 104 hr.
 
 ---
 
-# Introduction to Java and Java Technology (1/0.5) 
-- Introduction to Java. Benefits. 
-- JDK, JVM. 
-- Java 2 (Java EE / SE / ME) 
+# Introduction to Java and Java Technology (1/0.5)
+- Introduction to Java. Benefits.
+- JDK, JVM.
+- Java 2 (Java EE / SE / ME)
 - Tools: java, javac, javadoc
 
 ## Lab: Installing JDK, Tuning Environmental Variables
@@ -37,7 +38,7 @@ $ java -version
 
 ### DoD
 ```java
-$ Hello, world! 
+$ Hello, world!
 ```
 
 ---
@@ -131,11 +132,11 @@ $ git push
 
 ## Class Method Declaration
 - Return type
-- Static modifier 
+- Static modifier
 - Name
 - Parameters
 - Static initializers
- 
+
 ## Variable scopes
 - Local variables
 - Class variables and methods, static import
@@ -176,7 +177,7 @@ $ git push
 ## Operators
 - Arithmetic
 - Bitwise
-- Logical (lazy and eager) 
+- Logical (lazy and eager)
 - Compare and Ternary
 - Object references and equality
 
@@ -254,7 +255,7 @@ $ git push
 
 ## Enums
 - Enums emulation with class
-- Switch recap 
+- Switch recap
 - Smart Enum Pattern
 
 ## Course Project Iteration 04: Logger Library towards OO through Enums
@@ -386,7 +387,7 @@ $ git push
 ## Course Project Iteration 09: Introduce Observer/Listener Design Pattern for Appenders extensibility
 - Observer
 - Implementation with Anonymous classes
-- FR: As developer I want easily add new Appenders 
+- FR: As developer I want easily add new Appenders
 
 ### DoD
 - All given specifications runs are green
@@ -430,14 +431,14 @@ $ git push
 - Documented public API
 - Unit tests coverage >= 70%
 - Introduced checked exceptions for errors and alternate scenarios
- 
+
 ---
- 
+
 # System library (4/2)
 - System
 - Math
 - Object: hc and eq contract, toS
-- String, its API. Immutability and interns. 
+- String, its API. Immutability and interns.
 - StringBuffer, StringBuilder
 - Wrapper classes
 - Autoboxing
@@ -481,7 +482,7 @@ assertMessageEquals("3")
 - Stream API
 
 ## Course Project Iteration 13: Collections for code reuse
-- Choose and state collection interfaces 
+- Choose and state collection interfaces
 - Choose and state collection implementations
 - Refactor legacy codebase to collections API
 

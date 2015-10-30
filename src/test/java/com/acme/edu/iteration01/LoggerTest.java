@@ -65,19 +65,19 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
         //endregion
     }
 
-//    @Test
-//    public void shouldLogString() throws IOException {
-//        //region when
-//        Logger.log("test string 1");
-//        Logger.log("other str");
-//        //endregion
-//
-//        //region then
-//        assertSysoutContains("string: ");
-//        assertSysoutContains("test string 1");
-//        assertSysoutContains("other str");
-//        //endregion
-//    }
+    @Test
+    public void shouldLogString() throws IOException {
+        //region when
+        Logger.log("test string 1");
+        Logger.log("other str");
+        //endregion
+
+        //region then
+        assertSysoutContains("string: ");
+        assertSysoutContains("test string 1");
+        assertSysoutContains("other str");
+        //endregion
+    }
 
     @Test
     public void shouldLogBoolean() throws IOException {
@@ -93,16 +93,16 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
         //endregion
     }
 
-//    @Test
-//    public void shouldLogReference() throws IOException {
-//        //region when
-//        Logger.log(new Object());
-//        //endregion
-//
-//        //region then
-//        assertSysoutContains("reference: ");
-//        assertSysoutContains("@");
-//        //endregion
-//    }
+    @Test
+    public void shouldLogReference() throws IOException {
+        //region when
+        Logger.log(new Object());
+        //endregion
+
+        //region then
+        assertSysoutContains("reference: ");
+        assertSysoutContains("@");
+        //endregion
+    }
 
 }

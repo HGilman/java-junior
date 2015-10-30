@@ -16,16 +16,22 @@ public class Logger {
         printToConsole("primitive: ", String.valueOf(message));
     }
 
-    public static void log(byte message) {
-        printToConsole("primitive: ", String.valueOf(message));
-    }
-
     public static void log(char ch) {
         printToConsole("char: ", String.valueOf(ch));
+
     }
 
     public static void log(boolean bool) {
         printToConsole("primitive: ", String.valueOf(bool));
+    }
+
+
+    public static void log(String message) {
+        printToConsole("string: ", String.valueOf(message));
+    }
+
+    public static void log(Object obj) {
+        printToConsole("reference: ", obj.toString());
     }
 
     /**

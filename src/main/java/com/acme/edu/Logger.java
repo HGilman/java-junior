@@ -10,15 +10,15 @@ import java.nio.charset.Charset;
  */
 public class Logger {
 
+    private static int counter = 0;
 
-    public static void log(int message) {
-
-        printToConsole("primitive: ", String.valueOf(message));
+    public static void log(int num) {
+       // printToConsole("primitive: ", String.valueOf(message));
+        counter = counter + num;
     }
 
     public static void log(char ch) {
         printToConsole("char: ", String.valueOf(ch));
-
     }
 
     public static void log(boolean bool) {
@@ -27,19 +27,28 @@ public class Logger {
 
 
     public static void log(String message) {
-        printToConsole("string: ", String.valueOf(message));
+        printToConsole("primitive: ", String.valueOf(message));
     }
 
     public static void log(Object obj) {
         printToConsole("reference: ", obj.toString());
     }
 
+
+    public static void close() {
+        System.out.print(counter + "\n");
+        counter = 0;
+    }
+
+
     /**
     * Prints message to console
      */
     private static void printToConsole(String parameter, String message){
-        System.out.println(parameter + message);
+        System.out.print(parameter + message + "\n");
     }
+
+
 
     /**
      * Prints message to outPut stream
@@ -56,4 +65,6 @@ public class Logger {
             e.printStackTrace();
         }
     }
+
+
 }

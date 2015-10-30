@@ -2,6 +2,7 @@ package com.acme.edu.iteration01;
 
 import com.acme.edu.Logger;
 import com.acme.edu.SysoutCaptureAndAssertionAbility;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,17 +20,25 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
     //endregion
 
 
+
+    @After
+    public void tearDown() {
+        resetOut();
+    }
+
     @Test
     public void shouldLogInteger() throws IOException {
         //region when
         Logger.log(1);
         Logger.log(0);
         Logger.log(-1);
+        Logger.close();
         //endregion
 
         //region then
-        assertSysoutContains("primitive: ");
-        assertSysoutEquals("primitive: 1" + SEP + "primitive: 0"+ SEP + "primitive: -1" +SEP);
+        //assertSysoutContains("primitive: ");
+        //assertSysoutEquals("primitive: 1" + SEP + "primitive: 0"+ SEP + "primitive: -1" + SEP);
+        assertSysoutEquals( 0  + "");
         //endregion
     }
 
@@ -39,13 +48,17 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
         Logger.log((byte)1);
         Logger.log((byte)0);
         Logger.log((byte)-1);
+        Logger.close();
         //endregion
 
         //region then
-        assertSysoutContains("primitive: ");
-        assertSysoutContains("1");
-        assertSysoutContains("0");
-        assertSysoutContains("-1");
+        //assertSysoutContains("primitive: ");
+//        assertSysoutContains("1");
+//        assertSysoutContains("0");
+//        assertSysoutContains("-1");
+
+        assertSysoutEquals(0 + SEP);
+
         //endregion
     }
 
@@ -73,7 +86,7 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
         //endregion
 
         //region then
-        assertSysoutContains("string: ");
+        assertSysoutContains("primitive: ");
         assertSysoutContains("test string 1");
         assertSysoutContains("other str");
         //endregion

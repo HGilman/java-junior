@@ -11,109 +11,116 @@ public class Logger {
     /**
      * this is massage to console
      */
-    private static String text = null;
+    private static String buffer = "";
+    private static String typeBuffer = "";
     private static final String SEP = System.lineSeparator();
     /**
      * stores sum of entered numbers
      */
     private static long sum = 0;
-    private static String numberSequence = "";
-    private static String typeOfMessage = "";
-
-    private static String typeOfNum = "";
-    private static String previousString = "";
     private static int stringCounter = 1;
 
     public static void log(int num) {
-        if(typeOfNum.length() == 0){
-            typeOfNum = "int";
-        }
+        unleashBuffer("int");
         sum = sum + num;
-        numberSequence = numberSequence + num + SEP;
+        buffer = buffer + num + SEP;
     }
 
-    public static void log(byte num) {
-        if(typeOfNum.length() == 0){
-            typeOfNum = "byte";
-        }
-        sum = sum + num;
-        numberSequence = numberSequence + num + SEP;
-    }
 
     public static void log(char ch) {
-
+        unleashBuffer("char");
+        printToConsole("char: " + ch  + SEP, typeBuffer);
     }
 
     public static void log(boolean bool) {
-
+        unleashBuffer("boolean");
+        printToConsole("primitive: " + bool  + SEP, typeBuffer);
     }
 
 
     public static void log(String string) {
-        if (string.equals(previousString)){
+
+        unleashBuffer("string");
+
+        if(buffer.equals("")){
+            buffer = string;
+        } else if (string.equals(buffer)){
             stringCounter++;
         } else {
-            if ( !previousString.equals("") && stringCounter == 1){
-                typeOfMessage =  typeOfMessage + previousString + SEP;
-                previousString = string;
-
-            } else if (stringCounter > 1) {
-                typeOfMessage = typeOfMessage + previousString + "x(" + stringCounter + ")" + SEP;
-                previousString = string;
-
-            } else {
-                previousString = string;
-                typeOfMessage = string;
-            }
+            printToConsole(buffer, typeBuffer);
+            stringCounter = 1;
+            buffer = string;
+            typeBuffer = "string";
         }
     }
 
     public static void log(Object obj) {
 
+        unleashBuffer("object");
+        printToConsole("reference: " + obj + SEP, typeBuffer);
     }
 
 
     /**
-     * call this when you end to write numbers or
-     *  after last call of Logger.log() method
+     * you  must call this after last call of Logger.log() method
      */
     public static void close() {
-
-
-        if (typeOfNum.equals("byte")){
-            if (checkIfOverByte()){
-                text = typeOfMessage +  SEP + numberSequence;
-            } else {
-                text = typeOfMessage + SEP + sum + SEP;
-            }
-
-
-        } else if (typeOfNum.equals("int")){
-            if (checkIfOverInteger()){
-                text = typeOfMessage +  SEP + numberSequence;
-            } else {
-                text = typeOfMessage +  SEP + sum + SEP;
-            }
-        } else {
-            text = typeOfMessage;
-        }
-
-        previousString = "";
-        typeOfMessage = "";
-        numberSequence = "";
-        sum = 0;
-        printToConsole(text);
+        printToConsole(buffer, typeBuffer);
+        resetFields();
     }
 
 
     /**
     * Prints message to console
      */
-    private static void printToConsole(String message){
-        System.out.print( message );
+    private static void printToConsole(String message, String typeBuffer){
+
+       switch (typeBuffer){
+           case "string":
+               if (stringCounter == 1) {
+                   System.out.print("string: " + message + SEP);
+               } else {
+                   System.out.print("string: " + message + " (x" + stringCounter + ")" + SEP);
+               }
+               break;
+           case "int":
+               if (checkIfOverInteger()){
+                   System.out.print(message);
+               } else {
+                   System.out.print("primitive: " + sum + SEP);
+               }
+               break;
+           case "char":
+               System.out.print(message);
+               break;
+           case "boolean":
+               System.out.print(message);
+               break;
+           case "object":
+               System.out.print(message);
+       }
     }
 
 
+    /**
+     * we call this method at the top of any log() method to
+     * delete content of buffer if there is something and reset fields
+     *
+     * when typeBuffer == type we actually count sum of integers or counts of string, so
+     * we must skip cleaning buffer and resetting our fields.
+     * @param type is the same as in log (type) method , which called this method
+     */
+    private static void unleashBuffer(String type){
+        if (!typeBuffer.equals(type) && !typeBuffer.equals("") && !buffer.equals("")){
+            printToConsole(buffer, typeBuffer);
+            resetFields();
+        }
+        typeBuffer = type;
+    }
+
+    /**
+     * checks if sum of integers more then Integer.MAX_VALUE
+     */
     private static boolean checkIfOverInteger(){
 
         if (sum > Integer.MAX_VALUE){
@@ -123,12 +130,11 @@ public class Logger {
         }
     }
 
-    private static boolean checkIfOverByte(){
-        if (sum > Byte.MAX_VALUE){
-            return true;
-        } else {
-            return false;
-        }
+    private static void resetFields(){
+        typeBuffer = "";
+        buffer = "";
+        sum = 0;
+        stringCounter = 1;
     }
 
 

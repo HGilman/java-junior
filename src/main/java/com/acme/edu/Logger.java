@@ -1,68 +1,133 @@
 package com.acme.edu;
 
 
-import java.io.*;
-import java.nio.charset.Charset;
 
 /**
- * This class just prints in console or somewhere else information about
+ * This class prints in console  information about
  * what is happening in whole project
  */
 public class Logger {
 
-    private static int counter = 0;
+    /**
+     * this is massage to console
+     */
+    private static String text = null;
+    private static final String SEP = System.lineSeparator();
+    /**
+     * stores sum of entered numbers
+     */
+    private static long sum = 0;
+    private static String numberSequence = "";
+    private static String typeOfMessage = "";
+
+    private static String typeOfNum = "";
+    private static String previousString = "";
+    private static int stringCounter = 1;
 
     public static void log(int num) {
-       // printToConsole("primitive: ", String.valueOf(message));
-        counter = counter + num;
+        if(typeOfNum.length() == 0){
+            typeOfNum = "int";
+        }
+        sum = sum + num;
+        numberSequence = numberSequence + num + SEP;
+    }
+
+    public static void log(byte num) {
+        if(typeOfNum.length() == 0){
+            typeOfNum = "byte";
+        }
+        sum = sum + num;
+        numberSequence = numberSequence + num + SEP;
     }
 
     public static void log(char ch) {
-        printToConsole("char: ", String.valueOf(ch));
+
     }
 
     public static void log(boolean bool) {
-        printToConsole("primitive: ", String.valueOf(bool));
+
     }
 
 
-    public static void log(String message) {
-        printToConsole("primitive: ", String.valueOf(message));
+    public static void log(String string) {
+        if (string.equals(previousString)){
+            stringCounter++;
+        } else {
+            if ( !previousString.equals("") && stringCounter == 1){
+                typeOfMessage =  typeOfMessage + previousString + SEP;
+                previousString = string;
+
+            } else if (stringCounter > 1) {
+                typeOfMessage = typeOfMessage + previousString + "x(" + stringCounter + ")" + SEP;
+                previousString = string;
+
+            } else {
+                previousString = string;
+                typeOfMessage = string;
+            }
+        }
     }
 
     public static void log(Object obj) {
-        printToConsole("reference: ", obj.toString());
+
     }
 
 
+    /**
+     * call this when you end to write numbers or
+     *  after last call of Logger.log() method
+     */
     public static void close() {
-        System.out.print(counter + "\n");
-        counter = 0;
+
+
+        if (typeOfNum.equals("byte")){
+            if (checkIfOverByte()){
+                text = typeOfMessage +  SEP + numberSequence;
+            } else {
+                text = typeOfMessage + SEP + sum + SEP;
+            }
+
+
+        } else if (typeOfNum.equals("int")){
+            if (checkIfOverInteger()){
+                text = typeOfMessage +  SEP + numberSequence;
+            } else {
+                text = typeOfMessage +  SEP + sum + SEP;
+            }
+        } else {
+            text = typeOfMessage;
+        }
+
+        previousString = "";
+        typeOfMessage = "";
+        numberSequence = "";
+        sum = 0;
+        printToConsole(text);
     }
 
 
     /**
     * Prints message to console
      */
-    private static void printToConsole(String parameter, String message){
-        System.out.print(parameter + message + "\n");
+    private static void printToConsole(String message){
+        System.out.print( message );
     }
 
 
+    private static boolean checkIfOverInteger(){
 
-    /**
-     * Prints message to outPut stream
-     * @param outputStream
-     * @param parameter
-     * @param message
-     */
-    private static void printToOutputStream(OutputStream outputStream, String parameter, String message) {
+        if (sum > Integer.MAX_VALUE){
+            return   true;
+        } else {
+            return   false;
+        }
+    }
 
-        String str = parameter + message;
-        try {
-            outputStream.write(str.getBytes(Charset.forName("UTF-8")));
-        } catch (IOException e){
-            e.printStackTrace();
+    private static boolean checkIfOverByte(){
+        if (sum > Byte.MAX_VALUE){
+            return true;
+        } else {
+            return false;
         }
     }
 

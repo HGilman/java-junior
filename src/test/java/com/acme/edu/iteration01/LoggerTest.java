@@ -15,10 +15,10 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
     //region given
     @Before
     public void setUpSystemOut() throws IOException {
+        resetOut();
         captureSysout();
     }
     //endregion
-
 
 
     @After
@@ -38,7 +38,7 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
         //region then
         //assertSysoutContains("primitive: ");
         //assertSysoutEquals("primitive: 1" + SEP + "primitive: 0"+ SEP + "primitive: -1" + SEP);
-        assertSysoutEquals( 0  + "");
+        assertSysoutEquals( "primitive: "+ 0 + SEP);
         //endregion
     }
 
@@ -57,7 +57,7 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
 //        assertSysoutContains("0");
 //        assertSysoutContains("-1");
 
-        assertSysoutEquals(0 + SEP);
+        assertSysoutEquals("primitive: " + 0 + SEP);
 
         //endregion
     }

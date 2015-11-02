@@ -8,11 +8,15 @@ package com.acme.edu;
  */
 public class Logger {
 
+    private enum Type{
+        INT, CHAR, BOOL, STRING, OBJ, ARRAY
+    }
+
     /**
      * this is massage to console
      */
     private static String buffer = "";
-    private static String typeBuffer = "";
+    private static Type typeBuffer;
     private static final String SEP = System.lineSeparator();
     /**
      * stores sum of entered numbers
@@ -21,26 +25,26 @@ public class Logger {
     private static int stringCounter = 1;
 
     public static void log(int num) {
-        unleashBuffer("int");
+        unleashBuffer(Type.INT);
         sum = sum + num;
         buffer = buffer + num + SEP;
     }
 
 
     public static void log(char ch) {
-        unleashBuffer("char");
+        unleashBuffer(Type.CHAR);
         printToConsole("char: " + ch  + SEP, typeBuffer);
     }
 
     public static void log(boolean bool) {
-        unleashBuffer("boolean");
+        unleashBuffer(Type.BOOL);
         printToConsole("primitive: " + bool  + SEP, typeBuffer);
     }
 
 
     public static void log(String string) {
 
-        unleashBuffer("string");
+        unleashBuffer(Type.STRING);
 
         if(buffer.equals("")){
             buffer = string;
@@ -50,13 +54,13 @@ public class Logger {
             printToConsole(buffer, typeBuffer);
             stringCounter = 1;
             buffer = string;
-            typeBuffer = "string";
+            typeBuffer = Type.STRING;
         }
     }
 
     public static void log(Object obj) {
 
-        unleashBuffer("object");
+        unleashBuffer(Type.OBJ);
         printToConsole("reference: " + obj + SEP, typeBuffer);
     }
 
@@ -73,30 +77,30 @@ public class Logger {
     /**
     * Prints message to console
      */
-    private static void printToConsole(String message, String typeBuffer){
+    private static void printToConsole(String message, Type typeBuffer){
 
        switch (typeBuffer){
-           case "string":
+           case STRING:
                if (stringCounter == 1) {
                    System.out.print("string: " + message + SEP);
                } else {
                    System.out.print("string: " + message + " (x" + stringCounter + ")" + SEP);
                }
                break;
-           case "int":
+           case INT:
                if (checkIfOverInteger()){
                    System.out.print(message);
                } else {
                    System.out.print("primitive: " + sum + SEP);
                }
                break;
-           case "char":
+           case CHAR:
                System.out.print(message);
                break;
-           case "boolean":
+           case BOOL:
                System.out.print(message);
                break;
-           case "object":
+           case OBJ:
                System.out.print(message);
        }
     }
@@ -110,8 +114,8 @@ public class Logger {
      * we must skip cleaning buffer and resetting our fields.
      * @param type is the same as in log (type) method , which called this method
      */
-    private static void unleashBuffer(String type){
-        if (!typeBuffer.equals(type) && !typeBuffer.equals("") && !buffer.equals("")){
+    private static void unleashBuffer(Type type){
+        if (!(typeBuffer == type)  && !buffer.equals("")){
             printToConsole(buffer, typeBuffer);
             resetFields();
         }
@@ -131,7 +135,7 @@ public class Logger {
     }
 
     private static void resetFields(){
-        typeBuffer = "";
+        typeBuffer = null;
         buffer = "";
         sum = 0;
         stringCounter = 1;

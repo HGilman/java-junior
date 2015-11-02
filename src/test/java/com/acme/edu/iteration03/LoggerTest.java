@@ -58,33 +58,33 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
         //endregion
     }
 
-    @Test
-    public void shouldLogIntegersMulitidimentionalArray() throws IOException {
-        //region when
-        Logger.log(new int[][][][] {{{{0}}}});
-        //endregion
-
-        //region then
-        assertSysoutEquals(
-            "primitives multimatrix: {" + SEP +
-                "{" + SEP + "{" + SEP + "{"+ SEP +
-                    "0" + SEP +
-                "}"+ SEP + "}" + SEP + "}" + SEP +
-            "}" + SEP
-        );
-        //endregion
-    }
-
 //    @Test
-//    public void shouldLogStringsWithOneMethodCall() throws IOException {
+//    public void shouldLogIntegersMulitidimentionalArray() throws IOException {
 //        //region when
-//        Logger.log("str1", "string 2", "str 3");
+//        Logger.log(new int[][][][] {{{{0}}}});
 //        //endregion
 //
 //        //region then
-//        assertSysoutContains("str1\nstring 2\nstr 3");
+//        assertSysoutEquals(
+//            "primitives multimatrix: {" + SEP +
+//                "{" + SEP + "{" + SEP + "{"+ SEP +
+//                    "0" + SEP +
+//                "}"+ SEP + "}" + SEP + "}" + SEP +
+//            "}" + SEP
+//        );
 //        //endregion
 //    }
+
+    @Test
+    public void shouldLogStringsWithOneMethodCall() throws IOException {
+        //region when
+        Logger.log("str1", "string 2", "str 3");
+        //endregion
+
+        //region then
+        assertSysoutContains("str1" + SEP + "string 2" + SEP + "str 3");
+        //endregion
+    }
 
 //    @Test
 //    public void shouldLogIntegersWithOneMethodCall() throws IOException {

@@ -9,7 +9,7 @@ package com.acme.edu;
 public class Logger {
 
     private enum Type{
-        INT, CHAR, BOOL, STRING, OBJ, ARRAY, TwoDimArray
+        INT, CHAR, BOOL, STRING, OBJ, ARRAY, StringVarArg, IntVarArg, TwoDimArray
     }
 
     /**
@@ -46,6 +46,14 @@ public class Logger {
         printToConsole(message, Type.TwoDimArray);
     }
 
+//    public static void log(int... intVarArg){
+//        int sum = 0;
+//        for (int i : intVarArg){
+//            sum += i;
+//        }
+//        printToConsole(sum + "", Type.IntVarArg);
+//    }
+
 
     public static void log(char ch) {
         unleashBuffer(Type.CHAR);
@@ -72,6 +80,18 @@ public class Logger {
             buffer = string;
             typeBuffer = Type.STRING;
         }
+    }
+
+    public static void log (String... stringVarArg){
+        String message = "";
+        for (int i = 0; i < stringVarArg.length; i++) {
+            if (i != stringVarArg.length - 1){
+                message += stringVarArg[i] + SEP;
+            } else {
+                message += stringVarArg[i];
+            }
+        }
+        printToConsole(message, Type.StringVarArg);
     }
 
     public static void log(Object obj) {
@@ -124,6 +144,9 @@ public class Logger {
                break;
            case TwoDimArray:
                System.out.print("primitives matrix: " + message);
+               break;
+           case StringVarArg:
+               System.out.print(message);
        }
     }
 

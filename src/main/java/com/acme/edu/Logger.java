@@ -9,7 +9,7 @@ package com.acme.edu;
 public class Logger {
 
     private enum Type{
-        INT, CHAR, BOOL, STRING, OBJ, ARRAY
+        INT, CHAR, BOOL, STRING, OBJ, ARRAY, TwoDimArray
     }
 
     /**
@@ -28,6 +28,22 @@ public class Logger {
         unleashBuffer(Type.INT);
         sum = sum + num;
         buffer = buffer + num + SEP;
+    }
+
+    public static void log(int[] array){
+        String message = printArray(array);
+        printToConsole(message, Type.ARRAY);
+    }
+
+    public static void log(int[][] twoDimArray){
+
+        int length = twoDimArray.length;
+        String message = "{" + SEP;
+        for (int i = 0; i < length; i++) {
+            message += printArray(twoDimArray[i]);
+        }
+        message += "}" + SEP;
+        printToConsole(message, Type.TwoDimArray);
     }
 
 
@@ -102,6 +118,12 @@ public class Logger {
                break;
            case OBJ:
                System.out.print(message);
+               break;
+           case ARRAY:
+               System.out.print("primitives array: " + message);
+               break;
+           case TwoDimArray:
+               System.out.print("primitives matrix: " + message);
        }
     }
 
@@ -128,9 +150,9 @@ public class Logger {
     private static boolean checkIfOverInteger(){
 
         if (sum > Integer.MAX_VALUE){
-            return   true;
+            return true;
         } else {
-            return   false;
+            return false;
         }
     }
 
@@ -139,6 +161,18 @@ public class Logger {
         buffer = "";
         sum = 0;
         stringCounter = 1;
+    }
+
+    private static String printArray (int[] array){
+        String message = "{";
+        for (int i = 0; i < array.length; i++){
+            if (i != array.length - 1) {
+                message += array[i] + ", ";
+            } else {
+                message += array[i] + "}" + SEP;
+            }
+        }
+        return message;
     }
 
 

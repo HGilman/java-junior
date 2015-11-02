@@ -10,6 +10,8 @@ import java.io.IOException;
 
 public class LoggerTest implements SysoutCaptureAndAssertionAbility {
 
+    private static final String SEP = System.lineSeparator();
+
     //region given
     @Before
     public void setUpSystemOut() throws IOException {
@@ -34,44 +36,44 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
 
         //region then
         assertSysoutEquals(
-            "primitives array: {-1, 0, 1}\n"
+            "primitives array: {-1, 0, 1}" + SEP
         );
         //endregion
     }
 
-//    @Test
-//    public void shouldLogIntegersMatrix() throws IOException {
-//        //region when
-//        Logger.log(new int[][] {{-1, 0, 1}, {1, 2, 3}, {-1, -2, -3}});
-//        //endregion
-//
-//        //region then
-//        assertSysoutEquals(
-//            "primitives matrix: {\n" +
-//                "{-1, 0, 1}\n" +
-//                "{1, 2, 3}\n" +
-//                "{-1, -2, -3}\n" +
-//            "}\n"
-//        );
-//        //endregion
-//    }
+    @Test
+    public void shouldLogIntegersMatrix() throws IOException {
+        //region when
+        Logger.log(new int[][] {{-1, 0, 1}, {1, 2, 3}, {-1, -2, -3}});
+        //endregion
 
-//    @Test
-//    public void shouldLogIntegersMulitidimentionalArray() throws IOException {
-//        //region when
-//        Logger.log(new int[][][][] {{{{0}}}});
-//        //endregion
-//
-//        //region then
-//        assertSysoutEquals(
-//            "primitives multimatrix: {\n" +
-//                "{\n" + "{\n" + "{\n" +
-//                    "0\n" +
-//                "}\n" + "}\n" + "}\n" +
-//            "}\n"
-//        );
-//        //endregion
-//    }
+        //region then
+        assertSysoutEquals(
+            "primitives matrix: {"+ SEP +
+                "{-1, 0, 1}" + SEP +
+                "{1, 2, 3}" + SEP +
+                "{-1, -2, -3}" + SEP  +
+            "}" + SEP
+        );
+        //endregion
+    }
+
+    @Test
+    public void shouldLogIntegersMulitidimentionalArray() throws IOException {
+        //region when
+        Logger.log(new int[][][][] {{{{0}}}});
+        //endregion
+
+        //region then
+        assertSysoutEquals(
+            "primitives multimatrix: {" + SEP +
+                "{" + SEP + "{" + SEP + "{"+ SEP +
+                    "0" + SEP +
+                "}"+ SEP + "}" + SEP + "}" + SEP +
+            "}" + SEP
+        );
+        //endregion
+    }
 
 //    @Test
 //    public void shouldLogStringsWithOneMethodCall() throws IOException {

@@ -4,185 +4,82 @@ package com.acme.edu;
  * This class prints in console  information about
  * what is happening in whole project
  */
-public class Logger {
+public class Logger implements Closeable{
 
-    private enum Type{
-        INT, CHAR, BOOL, STRING, OBJ, ARRAY, StringVarArg, IntVarArg, TwoDimArray
+
+    // Fabrica??
+    private final static LoggerState INT_STATE = new IntLoggerState();
+    private final static LoggerState STRING_STATE = new StringLoggerState();
+    private final static LoggerState BOOLEAN_STATE = new BooleanLoggerState();
+    private final static LoggerState CHAR_STATE = new CharLoggerState();
+    private final static LoggerState OBJECT_STATE = new ObjectLoggerState();
+    public static final String SEP = System.lineSeparator();
+
+    private LoggerState state = null;
+
+    public void log(int i){
+        unleashState(INT_STATE, IntLoggerState.INT);
+        state.writeToBuffer(i + "");
     }
 
-    /**
-     * this is massage to console
-     */
-    private static String buffer = "";
-    private static Type typeBuffer;
-    private static final String SEP = System.lineSeparator();
-    /**
-     * stores sum of entered numbers
-     */
-    private static long sum = 0;
-    private static int stringCounter = 1;
-
-    public static void log(int num) {
-        unleashBuffer(Type.INT);
-        sum = sum + num;
-        buffer = buffer + num + SEP;
+    public void log(int... varArgArray){
+        unleashState(INT_STATE, IntLoggerState.INT_VARARG);
+        for (int i = 0; i < varArgArray.length; i++) {
+            state.writeToBuffer(i + "");
+        }
     }
 
-    public static void log(int[][] twoDimArray){
-
+    public void log(int[][] twoDimArray){
+        unleashState(INT_STATE, IntLoggerState.INT_TWODIM_ARRAY);
         int length = twoDimArray.length;
-        String message = "{" + SEP;
+        String message = "";
         for (int i = 0; i < length; i++) {
             message += printArray(twoDimArray[i]);
         }
-        message += "}" + SEP;
-        printToConsole(message, Type.TwoDimArray);
+        state.writeToBuffer(message);
+    }
+    public void log(char ch){
+        unleashState(CHAR_STATE);
+        state.writeToBuffer(ch + "");
+    }
+    public void log(boolean bool){
+        unleashState(BOOLEAN_STATE);
+        state.writeToBuffer(bool + "");
     }
 
-    public static void log(int... intVarArg){
-        int sum = 0;
-        for (int i : intVarArg){
-            sum += i;
-        }
-        printToConsole(sum + "", Type.IntVarArg);
+    public void log(String string){
+        unleashState(STRING_STATE, StringLoggerState.STRING);
+        state.writeToBuffer(string);
     }
 
+    public void log(String... string){}
 
-    public static void log(char ch) {
-        unleashBuffer(Type.CHAR);
-        printToConsole("char: " + ch  + SEP, typeBuffer);
+    public void log(Object object){
+        unleashState(OBJECT_STATE);
+        state.writeToBuffer(object + "");
     }
 
-    public static void log(boolean bool) {
-        unleashBuffer(Type.BOOL);
-        printToConsole("primitive: " + bool  + SEP, typeBuffer);
-    }
-
-
-    public static void log(String string) {
-
-        unleashBuffer(Type.STRING);
-
-        if(buffer.equals("")){
-            buffer = string;
-        } else if (string.equals(buffer)){
-            stringCounter++;
-        } else {
-            printToConsole(buffer, typeBuffer);
-            stringCounter = 1;
-            buffer = string;
-            typeBuffer = Type.STRING;
+    private void unleashState(LoggerState argState, int format){
+        if (state != argState && state != null){
+            state.flush();
+            state = argState;
+            state.setFormat(format);
+        } else if (state == null){
+            state = argState;
+            state.setFormat(format);
         }
     }
 
-    public static void log (String... stringVarArg){
-        String message = "";
-        for (int i = 0; i < stringVarArg.length; i++) {
-            if (i != stringVarArg.length - 1){
-                message += stringVarArg[i] + SEP;
-            } else {
-                message += stringVarArg[i];
-            }
-        }
-        printToConsole(message, Type.StringVarArg);
-    }
-
-    public static void log(Object obj) {
-
-        unleashBuffer(Type.OBJ);
-        printToConsole("reference: " + obj + SEP, typeBuffer);
-    }
-
-
-    /**
-     * you  must call this after last call of Logger.log() method
-     */
-    public static void close() {
-        printToConsole(buffer, typeBuffer);
-        resetFields();
-    }
-
-
-    /**
-    * Prints message to console
-     */
-    private static void printToConsole(String message, Type typeBuffer){
-
-       switch (typeBuffer){
-           case STRING:
-               if (stringCounter == 1) {
-                   System.out.print("string: " + message + SEP);
-               } else {
-                   System.out.print("string: " + message + " (x" + stringCounter + ")" + SEP);
-               }
-               break;
-           case INT:
-               if (checkIfOverInteger()){
-                   System.out.print(message);
-               } else {
-                   System.out.print("primitive: " + sum + SEP);
-               }
-               break;
-           case CHAR:
-               System.out.print(message);
-               break;
-           case BOOL:
-               System.out.print(message);
-               break;
-           case OBJ:
-               System.out.print(message);
-               break;
-           case ARRAY:
-               System.out.print("primitives array: " + message);
-               break;
-           case TwoDimArray:
-               System.out.print("primitives matrix: " + message);
-               break;
-           case StringVarArg:
-               System.out.print(message);
-               break;
-           case IntVarArg:
-               System.out.print(message);
-       }
-    }
-
-
-    /**
-     * we call this method at the top of any log() method to
-     * delete content of buffer if there is something and reset fields
-     *
-     * when typeBuffer == type we actually count sum of integers or counts of string, so
-     * we must skip cleaning buffer and resetting our fields.
-     * @param type is the same as in log (type) method , which called this method
-     */
-    private static void unleashBuffer(Type type){
-        if (!(typeBuffer == type)  && !buffer.equals("")){
-            printToConsole(buffer, typeBuffer);
-            resetFields();
-        }
-        typeBuffer = type;
-    }
-
-    /**
-     * checks if sum of integers more then Integer.MAX_VALUE
-     */
-    private static boolean checkIfOverInteger(){
-
-        if (sum > Integer.MAX_VALUE){
-            return true;
-        } else {
-            return false;
+    private void unleashState(LoggerState argState){
+        if (state != argState && state != null){
+            state.flush();
+            state = argState;
+        } else if (state == null){
+            state = argState;
         }
     }
 
-    private static void resetFields(){
-        typeBuffer = null;
-        buffer = "";
-        sum = 0;
-        stringCounter = 1;
-    }
-
-    private static String printArray (int[] array){
+    private  String printArray (int[] array){
         String message = "{";
         for (int i = 0; i < array.length; i++){
             if (i != array.length - 1) {
@@ -194,5 +91,7 @@ public class Logger {
         return message;
     }
 
-
+    public void close(){
+        state.close();
+    }
 }

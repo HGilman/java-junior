@@ -1,7 +1,5 @@
 package com.acme.edu;
 
-
-
 /**
  * This class prints in console  information about
  * what is happening in whole project
@@ -30,11 +28,6 @@ public class Logger {
         buffer = buffer + num + SEP;
     }
 
-    public static void log(int[] array){
-        String message = printArray(array);
-        printToConsole(message, Type.ARRAY);
-    }
-
     public static void log(int[][] twoDimArray){
 
         int length = twoDimArray.length;
@@ -46,13 +39,13 @@ public class Logger {
         printToConsole(message, Type.TwoDimArray);
     }
 
-//    public static void log(int... intVarArg){
-//        int sum = 0;
-//        for (int i : intVarArg){
-//            sum += i;
-//        }
-//        printToConsole(sum + "", Type.IntVarArg);
-//    }
+    public static void log(int... intVarArg){
+        int sum = 0;
+        for (int i : intVarArg){
+            sum += i;
+        }
+        printToConsole(sum + "", Type.IntVarArg);
+    }
 
 
     public static void log(char ch) {
@@ -146,6 +139,9 @@ public class Logger {
                System.out.print("primitives matrix: " + message);
                break;
            case StringVarArg:
+               System.out.print(message);
+               break;
+           case IntVarArg:
                System.out.print(message);
        }
     }

@@ -13,7 +13,7 @@ public class IntLoggerState extends LoggerState  {
 
 
     private int format;
-    private int sum = 0;
+    private long sum = 0;
 
     public IntLoggerState(){}
 

@@ -18,13 +18,11 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
         resetOut();
         captureSysout();
     }
-    //endregion
-
     @Before
     public void createLogger() {
         logger = new Logger();
     }
-
+    //endregion
 
     @After
     public void tearDown() {

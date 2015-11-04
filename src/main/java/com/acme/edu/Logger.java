@@ -7,15 +7,15 @@ package com.acme.edu;
 public class Logger implements Closeable{
 
 
-    // Fabrica??
     private final static LoggerState INT_STATE = new IntLoggerState();
     private final static LoggerState STRING_STATE = new StringLoggerState();
     private final static LoggerState BOOLEAN_STATE = new BooleanLoggerState();
     private final static LoggerState CHAR_STATE = new CharLoggerState();
     private final static LoggerState OBJECT_STATE = new ObjectLoggerState();
+
     public static final String SEP = System.lineSeparator();
 
-    private LoggerState state = null;
+    private LoggerState state = CHAR_STATE;
 
     public void log(int i){
         unleashState(INT_STATE, IntLoggerState.INT);
@@ -24,7 +24,7 @@ public class Logger implements Closeable{
 
     public void log(int... varArgArray){
         unleashState(INT_STATE, IntLoggerState.INT_VARARG);
-        for (int i = 0; i < varArgArray.length; i++) {
+        for (int i : varArgArray){
             state.writeToBuffer(i + "");
         }
     }
@@ -39,49 +39,38 @@ public class Logger implements Closeable{
         state.writeToBuffer(message);
     }
     public void log(char ch){
-        unleashState(CHAR_STATE);
+        unleashState(CHAR_STATE, -1);
         state.writeToBuffer(ch + "");
     }
     public void log(boolean bool){
-        unleashState(BOOLEAN_STATE);
+        unleashState(BOOLEAN_STATE, -1);
         state.writeToBuffer(bool + "");
     }
 
     public void log(String string){
-        unleashState(STRING_STATE, StringLoggerState.STRING);
+        unleashState(STRING_STATE, -1);
         state.writeToBuffer(string);
     }
 
     public void log(String... string){}
 
     public void log(Object object){
-        unleashState(OBJECT_STATE);
+        unleashState(OBJECT_STATE, -1);
         state.writeToBuffer(object + "");
     }
 
     private void unleashState(LoggerState argState, int format){
-        if (state != argState && state != null){
+        if (state != argState){
             state.flush();
             state = argState;
             state.setFormat(format);
-        } else if (state == null){
-            state = argState;
-            state.setFormat(format);
-        }
+        } else {}
     }
 
-    private void unleashState(LoggerState argState){
-        if (state != argState && state != null){
-            state.flush();
-            state = argState;
-        } else if (state == null){
-            state = argState;
-        }
-    }
 
     private  String printArray (int[] array){
         String message = "{";
-        for (int i = 0; i < array.length; i++){
+        for (int i : array ){
             if (i != array.length - 1) {
                 message += array[i] + ", ";
             } else {

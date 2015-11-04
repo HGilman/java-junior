@@ -5,18 +5,28 @@ package com.acme.edu;
  */
 public class StringLoggerState extends LoggerState {
 
-
-    public static final int STRING = 0;
-
-    private int format;
+    private int stringCounter = 1;
 
     @Override
     protected void writeToBuffer(String string) {
-        buffer += "string: " + string + SEP;
+        if (buffer.equals(string)){
+            stringCounter++;
+        } else {
+            if (!buffer.equals("")){
+                flush();
+            }
+            buffer = string;
+        }
     }
 
     @Override
-    protected void setFormat(int format) {
-        this.format = format;
+    public void flush(){
+        if (stringCounter > 1) {
+            printer.print( "string: " + buffer + " (x" + stringCounter + ")" + SEP);
+        } else {
+            printer.print("string: " + buffer + SEP);
+        }
+        buffer = "";
+        stringCounter = 1;
     }
 }

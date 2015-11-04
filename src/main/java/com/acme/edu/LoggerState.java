@@ -11,7 +11,7 @@ public abstract class LoggerState implements Closeable{
     protected Printable printer = new ConsolePrinter();
 
     protected void flush() {
-        System.out.print(buffer);
+        printer.print(buffer);
         buffer = "";
     }
 

@@ -47,7 +47,6 @@ public class IntLoggerState extends LoggerState  {
         buffer += i + SEP;
     }
 
-
     /**
      * checks if sum of integers more then Integer.MAX_VALUE
      */

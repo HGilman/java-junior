@@ -5,14 +5,21 @@ package com.acme.edu;
  */
 public abstract class LoggerState implements Closeable{
 
-    public static final String SEP = System.lineSeparator();
-    public String buffer = "";
+    protected static final String SEP = System.lineSeparator();
+    protected String buffer = "";
 
-    public Printable printer = new ConsolePrinter();
+    protected Printable printer = new ConsolePrinter();
 
-    abstract void flush();
-    abstract void writeToBuffer(String string);
-    abstract void setFormat(int format);
+    protected void flush() {
+        System.out.print(buffer);
+        buffer = "";
+    }
+
+    protected void writeToBuffer(String string){
+        buffer += "primitive: " + string + SEP;
+    };
+
+    protected void setFormat(int format){};
     public void close(){
         flush();
     }

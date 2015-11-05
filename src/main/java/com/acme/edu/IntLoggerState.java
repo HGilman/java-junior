@@ -45,6 +45,8 @@ public class IntLoggerState extends LoggerState  {
                     break;
                 case INT_MULTI_ARRAY:
                     printer.print(buffer);
+                    break;
+                default:
             }
             buffer = "";
         } catch (PrinterException e ) {
@@ -71,6 +73,8 @@ public class IntLoggerState extends LoggerState  {
                 break;
             case INT_MULTI_ARRAY:
                 buffer += "primitives multimatrix: " + string;
+                break;
+            default:
         }
 
     }

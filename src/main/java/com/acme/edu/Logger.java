@@ -133,6 +133,7 @@ public class Logger implements Closeable {
      * ......
      * logger.close(); -> that is where close method stay
      */
+    @Override
     public void close(){
         try {
             state.close();
@@ -152,7 +153,6 @@ public class Logger implements Closeable {
                 state.flush();
                 state = argState;
                 state.setFormat(format);
-            } else {
             }
         } catch (PrinterException e) {
             System.out.println("Exception while changing state" + e.getCause());

@@ -8,6 +8,7 @@ public class ConsolePrinter implements Printable  {
     /**
      * Prints message to console
      */
+    @Override
     public void print(String message){
         System.out.print(message);
     }

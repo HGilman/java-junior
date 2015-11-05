@@ -47,6 +47,7 @@ public abstract class LoggerState implements Closeable {
      * You should call this after last call of any log() method
      * @throws PrinterException in case of problems while writing messages
      */
+    @Override
     public void close() throws PrinterException {
         flush();
     }

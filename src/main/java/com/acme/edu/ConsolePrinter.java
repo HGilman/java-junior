@@ -1,10 +1,13 @@
 package com.acme.edu;
 
 /**
- * Created by Khasan on 03.11.2015.
+ * This class is reliable for output logging messages to console
  */
 public class ConsolePrinter implements Printable  {
 
+    /**
+     * Prints message to console
+     */
     public void print(String message){
         System.out.print(message);
     }

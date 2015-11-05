@@ -42,6 +42,9 @@ public class IntLoggerState extends LoggerState  {
                     break;
                 case INT_TWODIM_ARRAY:
                     printer.print(buffer);
+                    break;
+                case INT_MULTI_ARRAY:
+                    printer.print(buffer);
             }
             buffer = "";
         } catch (PrinterException e ) {
@@ -60,9 +63,7 @@ public class IntLoggerState extends LoggerState  {
         switch (format) {
             case INT:
                 int i = Integer.parseInt(string);
-                if (!checkIfOverInteger()){
-                    sum += i;
-                }
+                sum += i;
                 buffer += i + SEP;
                 break;
             case INT_TWODIM_ARRAY:

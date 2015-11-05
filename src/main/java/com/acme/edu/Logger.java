@@ -1,6 +1,5 @@
 package com.acme.edu;
 
-import com.acme.edu.exceptions.LoggerException;
 import com.acme.edu.exceptions.PrinterException;
 
 /**
@@ -9,35 +8,31 @@ import com.acme.edu.exceptions.PrinterException;
  */
 public class Logger implements Closeable {
 
-
-//    public static final String LOG_PRIMITIVE = "primitive: ";
-//    public static final String LOG_CHAR = "char: ";
-//    public static final String LOG_STRING = "string: ";
-//    public static final String LOG_REFERENCE = "reference: ";
-//    public static final String LOG_PRIMITIVES_MATRIX = "primitives matrix: ";
-//    public static final String LOG_PRIMITIVES_MULTIMATRIX = "primitives multimatrix: ";
-
-
     private final static LoggerState INT_STATE = new IntLoggerState();
     private final static LoggerState STRING_STATE = new StringLoggerState();
     private final static LoggerState BOOLEAN_STATE = new BooleanLoggerState();
     private final static LoggerState CHAR_STATE = new CharLoggerState();
     private final static LoggerState OBJECT_STATE = new ObjectLoggerState();
 
-
-
-
     public static final String SEP = System.lineSeparator();
-
     private LoggerState state = CHAR_STATE;
 
+    /**
+     * Prints in console sum of arguments, if we call
+     * this method sequentially. So for this:
+     * log.(4);
+     * log(5);
+     * we will see: "primitives: " + 9;
+     */
     public void log(int i) {
-
         unleashState(INT_STATE, IntLoggerState.INT);
         state.writeToBuffer(i + "");
-
     }
 
+    /**
+     * Prints in console sum of int varArg
+     * like this: "primitives: " + (sum of int in varArg);
+     */
     public void log(int... varArgArray) {
         unleashState(INT_STATE, IntLoggerState.INT);
         for (int i : varArgArray) {
@@ -45,51 +40,112 @@ public class Logger implements Closeable {
         }
     }
 
+    /**
+     * Prints two dimensional array to console in this format:
+     *  "primitives matrix: {
+     *  {..}
+     *  {...}
+     *  ...
+     *  }"
+     */
     public void log(int[][] twoDimArray) {
         unleashState(INT_STATE, IntLoggerState.INT_TWODIM_ARRAY);
-        int length = twoDimArray.length;
-        String message = "{" + SEP;
-        for (int i = 0; i < length; i++) {
-            message += printIntArray(twoDimArray[i]);
-        }
-        message += "}" + SEP;
-        state.writeToBuffer(message);
+        state.writeToBuffer(toStringIntTwoDimArray(twoDimArray));
     }
 
+    /**
+     * Prints multi dim array similarly as matrix array
+     */
     public void log (int [][][][] multiArray) {
         unleashState(INT_STATE, IntLoggerState.INT_MULTI_ARRAY);
-        int firstLength = multiArray.length;
-        String message = "{" + SEP;
-        for (int i = 0; i < firstLength; i++) {
 
+        String message = "{" + SEP;
+        for (int i = 0; i < multiArray.length; i++) {
+            message += "{" + SEP;
+            for (int j = 0; j < multiArray[i].length ; j++) {
+                message += toStringIntTwoDimArray(multiArray[i][j]);
+            }
+            message += "}" + SEP;
         }
         message += "}" + SEP;
+
         state.writeToBuffer(message);
     }
+
+    /**
+     * Prints arguments to console
+     * like this: "char: " + "ch1"
+     */
     public void log(char ch) {
         unleashState(CHAR_STATE, -1);
         state.writeToBuffer(ch + "");
     }
+
+    /**
+     * Prints arguments to console
+     * like this: "primitive: " + "bool";
+     */
     public void log(boolean bool) {
         unleashState(BOOLEAN_STATE, -1);
         state.writeToBuffer(bool + "");
     }
 
+    /**
+     * Prints arguments to conole
+     * like this: "string: " + "string";
+     * but if you call this sequentially with the equals
+     * strings than we got this:
+     * "string: " + "stringArg" + "x(number of sequential stringArg strings)"
+     */
     public void log(String string) {
         unleashState(STRING_STATE, -1);
         state.writeToBuffer(string);
     }
 
+    /**
+     * Prints string arguments to console like this:
+     * "string: " + "strArg1"
+     * "string: " + "strArg2"
+     * ...
+     */
     public void log(String... stringArray) {
         unleashState(STRING_STATE, -1);
-        state.writeToBuffer(printStringArray(stringArray));
+        state.writeToBuffer(toStringStringArray(stringArray));
     }
 
+    /**
+     * Prints to console like this:
+     * "reference: " + "objectArg.toString()"
+     */
     public void log(Object object) {
         unleashState(OBJECT_STATE, -1);
         state.writeToBuffer(object + "");
     }
 
+    /**
+     * you must always call this method after you finished logging,
+     * that is after last call of logger.log(SomeType type) method
+     * f.e that is how you usually work with this class:
+     * Logger logger = new Logger();
+     * logger.log(5);
+     * logger.log(6);
+     * logger.log("str1");
+     * ......
+     * logger.close(); -> that is where close method stay
+     */
+    public void close(){
+        try {
+            state.close();
+        } catch (PrinterException e) {
+            System.out.println("Exception while closing " + e.getCause());
+        }
+    }
+
+    /**
+     * I call this in the beginning of any log() method
+     * to change state if we need , print out buffer and clear it and
+     * than set new state and new format
+     */
     private void unleashState(LoggerState argState, int format) {
         try {
             if (state != argState) {
@@ -103,9 +159,15 @@ public class Logger implements Closeable {
         }
     }
 
-
-    // should rename this method
-    private  String printIntArray (int[] array) {
+    /**
+     * Makes string from int array in format:
+     * {
+     * {...}
+     * {....}
+     * ....
+     * }
+     */
+    private  String toStringIntArray (int[] array) {
         String message = "{";
         for (int i = 0; i < array.length; i++) {
             if (i != array.length - 1) {
@@ -117,7 +179,16 @@ public class Logger implements Closeable {
         return message;
     }
 
-    private  String printStringArray (String[] array) {
+    private String toStringIntTwoDimArray(int[][] twoDimArray){
+        String message = "{" + SEP;
+        for (int i = 0; i < twoDimArray.length; i++) {
+            message += toStringIntArray(twoDimArray[i]);
+        }
+        message += "}" + SEP;
+        return message;
+    }
+
+    private  String toStringStringArray (String[] array) {
         String message = "";
         for (String s : array) {
             message += s +  SEP;
@@ -125,12 +196,5 @@ public class Logger implements Closeable {
         return message;
     }
 
-    public void close(){
 
-        try {
-        state.close();
-        } catch (PrinterException e) {
-            System.out.println("Exception while closing " + e.getCause());
-        }
-    }
 }

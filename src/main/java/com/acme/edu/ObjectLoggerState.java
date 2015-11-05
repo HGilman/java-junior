@@ -7,5 +7,5 @@ public class ObjectLoggerState extends LoggerState {
     @Override
     public void writeToBuffer(String string){
         buffer += "reference: " + string + SEP;
-    };
+    }
 }

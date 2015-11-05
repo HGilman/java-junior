@@ -50,7 +50,7 @@ public class IntLoggerState extends LoggerState  {
             }
             buffer = "";
         } catch (PrinterException e ) {
-            System.out.println();
+            System.out.println("pr");
         }
 
     }

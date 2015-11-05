@@ -1,5 +1,6 @@
 package com.acme.edu;
 
+import com.acme.edu.exceptions.LoggerException;
 import com.acme.edu.exceptions.PrinterException;
 
 /**
@@ -24,7 +25,7 @@ public class Logger implements Closeable {
      * log(5);
      * we will see: "primitives: " + 9;
      */
-    public void log(int i) {
+    public void log(int i) throws LoggerException {
         unleashState(INT_STATE, IntLoggerState.INT);
         state.writeToBuffer(i + "");
     }
@@ -33,7 +34,7 @@ public class Logger implements Closeable {
      * Prints in console sum of int varArg
      * like this: "primitives: " + (sum of int in varArg);
      */
-    public void log(int... varArgArray) {
+    public void log(int... varArgArray) throws LoggerException {
         unleashState(INT_STATE, IntLoggerState.INT);
         for (int i : varArgArray) {
             state.writeToBuffer(i + "");
@@ -48,7 +49,7 @@ public class Logger implements Closeable {
      *  ...
      *  }"
      */
-    public void log(int[][] twoDimArray) {
+    public void log(int[][] twoDimArray) throws LoggerException {
         unleashState(INT_STATE, IntLoggerState.INT_TWODIM_ARRAY);
         state.writeToBuffer(toStringIntTwoDimArray(twoDimArray));
     }
@@ -56,7 +57,7 @@ public class Logger implements Closeable {
     /**
      * Prints multi dim array similarly as matrix array
      */
-    public void log (int [][][][] multiArray) {
+    public void log (int [][][][] multiArray) throws LoggerException {
         unleashState(INT_STATE, IntLoggerState.INT_MULTI_ARRAY);
 
         String message = "{" + SEP;
@@ -76,7 +77,7 @@ public class Logger implements Closeable {
      * Prints arguments to console
      * like this: "char: " + "ch1"
      */
-    public void log(char ch) {
+    public void log(char ch) throws LoggerException {
         unleashState(CHAR_STATE, -1);
         state.writeToBuffer(ch + "");
     }
@@ -85,7 +86,7 @@ public class Logger implements Closeable {
      * Prints arguments to console
      * like this: "primitive: " + "bool";
      */
-    public void log(boolean bool) {
+    public void log(boolean bool) throws LoggerException {
         unleashState(BOOLEAN_STATE, -1);
         state.writeToBuffer(bool + "");
     }
@@ -97,7 +98,7 @@ public class Logger implements Closeable {
      * strings than we got this:
      * "string: " + "stringArg" + "x(number of sequential stringArg strings)"
      */
-    public void log(String string) {
+    public void log(String string) throws LoggerException {
         unleashState(STRING_STATE, -1);
         state.writeToBuffer(string);
     }
@@ -108,7 +109,7 @@ public class Logger implements Closeable {
      * "string: " + "strArg2"
      * ...
      */
-    public void log(String... stringArray) {
+    public void log(String... stringArray) throws LoggerException {
         unleashState(STRING_STATE, -1);
         state.writeToBuffer(toStringStringArray(stringArray));
     }
@@ -117,7 +118,7 @@ public class Logger implements Closeable {
      * Prints to console like this:
      * "reference: " + "objectArg.toString()"
      */
-    public void log(Object object) {
+    public void log(Object object) throws LoggerException{
         unleashState(OBJECT_STATE, -1);
         state.writeToBuffer(object + "");
     }
@@ -134,11 +135,11 @@ public class Logger implements Closeable {
      * logger.close(); -> that is where close method stay
      */
     @Override
-    public void close(){
+    public void close() throws LoggerException {
         try {
             state.close();
         } catch (PrinterException e) {
-            System.out.println("Exception while closing " + e.getCause());
+            throw new LoggerException("problem while writing log message in close() method", e);
         }
     }
 
@@ -147,7 +148,7 @@ public class Logger implements Closeable {
      * to change state if we need , print out buffer and clear it and
      * than set new state and new format
      */
-    private void unleashState(LoggerState argState, int format) {
+    private void unleashState(LoggerState argState, int format) throws  LoggerException {
         try {
             if (state != argState) {
                 state.flush();
@@ -155,7 +156,8 @@ public class Logger implements Closeable {
                 state.setFormat(format);
             }
         } catch (PrinterException e) {
-            System.out.println("Exception while changing state" + e.getCause());
+            throw new LoggerException("problem while changing state or cleaning buffer \n" +
+                    "in unleashState method", e);
         }
     }
 

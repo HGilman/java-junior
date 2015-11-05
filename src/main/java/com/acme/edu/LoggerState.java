@@ -19,7 +19,8 @@ public abstract class LoggerState implements Closeable{
         buffer += "primitive: " + string + SEP;
     };
 
-    protected void setFormat(int format){};
+    protected void setFormat(int format) {};
+
     public void close(){
         flush();
     }

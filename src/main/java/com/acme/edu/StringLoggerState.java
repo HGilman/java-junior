@@ -5,14 +5,15 @@ package com.acme.edu;
  */
 public class StringLoggerState extends LoggerState {
 
+
     private int stringCounter = 1;
 
     @Override
     protected void writeToBuffer(String string) {
-        if (buffer.equals(string)){
+        if (buffer.equals(string)) {
             stringCounter++;
         } else {
-            if (!buffer.equals("")){
+            if (!buffer.equals("")) {
                 flush();
             }
             buffer = string;
@@ -20,9 +21,10 @@ public class StringLoggerState extends LoggerState {
     }
 
     @Override
-    public void flush(){
+    public void flush() {
+
         if (stringCounter > 1) {
-            printer.print( "string: " + buffer + " (x" + stringCounter + ")" + SEP);
+            printer.print("string: " + buffer + " (x" + stringCounter + ")" + SEP);
         } else {
             printer.print("string: " + buffer + SEP);
         }

@@ -1,5 +1,7 @@
 package com.acme.edu;
 
+import com.acme.edu.exceptions.PrinterException;
+
 /**
  * Created by Khasan on 03.11.2015.
  */
@@ -23,12 +25,16 @@ public class StringLoggerState extends LoggerState {
     @Override
     public void flush() {
 
-        if (stringCounter > 1) {
-            printer.print("string: " + buffer + " (x" + stringCounter + ")" + SEP);
-        } else {
-            printer.print("string: " + buffer + SEP);
+        try {
+            if (stringCounter > 1) {
+                printer.print("string: " + buffer + " (x" + stringCounter + ")" + SEP);
+            } else {
+                printer.print("string: " + buffer + SEP);
+            }
+            buffer = "";
+            stringCounter = 1;
+        } catch (PrinterException e) {
+            System.out.println("Exception while String buffer flushing " + e.getCause());
         }
-        buffer = "";
-        stringCounter = 1;
     }
 }

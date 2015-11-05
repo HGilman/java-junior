@@ -1,10 +1,21 @@
 package com.acme.edu;
 
+import com.acme.edu.exceptions.LoggerException;
+import com.acme.edu.exceptions.PrinterException;
+
 /**
  * This class prints in console  information about
  * what is happening in whole project
  */
 public class Logger implements Closeable {
+
+
+//    public static final String LOG_PRIMITIVE = "primitive: ";
+//    public static final String LOG_CHAR = "char: ";
+//    public static final String LOG_STRING = "string: ";
+//    public static final String LOG_REFERENCE = "reference: ";
+//    public static final String LOG_PRIMITIVES_MATRIX = "primitives matrix: ";
+//    public static final String LOG_PRIMITIVES_MULTIMATRIX = "primitives multimatrix: ";
 
 
     private final static LoggerState INT_STATE = new IntLoggerState();
@@ -13,13 +24,18 @@ public class Logger implements Closeable {
     private final static LoggerState CHAR_STATE = new CharLoggerState();
     private final static LoggerState OBJECT_STATE = new ObjectLoggerState();
 
+
+
+
     public static final String SEP = System.lineSeparator();
 
     private LoggerState state = CHAR_STATE;
 
     public void log(int i) {
+
         unleashState(INT_STATE, IntLoggerState.INT);
         state.writeToBuffer(i + "");
+
     }
 
     public void log(int... varArgArray) {
@@ -75,15 +91,20 @@ public class Logger implements Closeable {
     }
 
     private void unleashState(LoggerState argState, int format) {
-        if (state != argState) {
-            state.flush();
-            state = argState;
-            state.setFormat(format);
-        } else {}
+        try {
+            if (state != argState) {
+                state.flush();
+                state = argState;
+                state.setFormat(format);
+            } else {
+            }
+        } catch (PrinterException e) {
+            System.out.println("Exception while changing state" + e.getCause());
+        }
     }
 
 
-
+    // should rename this method
     private  String printIntArray (int[] array) {
         String message = "{";
         for (int i = 0; i < array.length; i++) {
@@ -105,6 +126,11 @@ public class Logger implements Closeable {
     }
 
     public void close(){
+
+        try {
         state.close();
+        } catch (PrinterException e) {
+            System.out.println("Exception while closing " + e.getCause());
+        }
     }
 }

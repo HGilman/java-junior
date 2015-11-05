@@ -1,27 +1,31 @@
 package com.acme.edu;
 
+import com.acme.edu.exceptions.PrinterException;
+
 /**
  * Created by Khasan on 03.11.2015.
  */
-public abstract class LoggerState implements Closeable{
+public abstract class LoggerState implements Closeable {
 
     protected static final String SEP = System.lineSeparator();
     protected String buffer = "";
 
     protected Printable printer = new ConsolePrinter();
 
-    protected void flush() {
+    protected void flush() throws PrinterException{
         printer.print(buffer);
         buffer = "";
     }
 
-    protected void writeToBuffer(String string){
+    protected void writeToBuffer(String string) {
         buffer += "primitive: " + string + SEP;
+    }
+    ;
+
+    protected void setFormat(int format) {
     };
 
-    protected void setFormat(int format) {};
-
-    public void close(){
+    public void close() throws PrinterException {
         flush();
     }
 

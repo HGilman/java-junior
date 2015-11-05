@@ -1,6 +1,7 @@
 package com.acme.edu;
 
 
+import com.acme.edu.exceptions.PrinterException;
 
 /**
  * Created by Khasan on 03.11.2015.
@@ -28,20 +29,25 @@ public class IntLoggerState extends LoggerState  {
     }
 
     @Override
-    public void flush() {
-        switch (format) {
-            case INT:
-                if (!(checkIfOverInteger())) {
-                    printer.print("primitive: " + sum + SEP);
-                } else {
+    public void flush()  {
+        try {
+            switch (format) {
+                case INT:
+                    if (!(checkIfOverInteger())) {
+                        printer.print("primitive: " + sum + SEP);
+                    } else {
+                        printer.print(buffer);
+                    }
+                    sum = 0;
+                    break;
+                case INT_TWODIM_ARRAY:
                     printer.print(buffer);
-                }
-                sum = 0;
-                break;
-            case INT_TWODIM_ARRAY:
-                printer.print(buffer);
+            }
+            buffer = "";
+        } catch (PrinterException e ) {
+            System.out.println();
         }
-        buffer = "";
+
     }
 
     /**

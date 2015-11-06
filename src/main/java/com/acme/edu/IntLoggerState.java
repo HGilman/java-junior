@@ -9,11 +9,9 @@ import com.acme.edu.exceptions.PrinterException;
 public class IntLoggerState extends LoggerState  {
 
     public static final int INT = 0;
-    public static final int INT_TWODIM_ARRAY = 2;
-    public static final int INT_MULTI_ARRAY = 3;
+    public static final int INT_TWODIM_ARRAY = 1;
+    public static final int INT_MULTI_ARRAY = 2;
 
-
-    private int format;
 
     /**
      * store here sum of consequentially entered int
@@ -23,36 +21,27 @@ public class IntLoggerState extends LoggerState  {
 
     public IntLoggerState(){}
 
-    @Override
-    public void setFormat(int format) {
-        this.format = format;
-    }
 
     @Override
-    public void flush()  {
-        try {
-            switch (format) {
-                case INT:
-                    if (!(checkIfOverInteger())) {
-                        printer.print("primitive: " + sum + SEP);
-                    } else {
-                        printer.print(buffer);
-                    }
-                    sum = 0;
-                    break;
-                case INT_TWODIM_ARRAY:
+    public void flush() throws PrinterException {
+        switch (format) {
+            case INT:
+                if (!(checkIfOverInteger())) {
+                    printer.print("primitive: " + sum + SEP);
+                } else {
                     printer.print(buffer);
-                    break;
-                case INT_MULTI_ARRAY:
-                    printer.print(buffer);
-                    break;
-                default:
-            }
-            buffer = "";
-        } catch (PrinterException e ) {
-            System.out.println("pr");
+                }
+                sum = 0;
+                break;
+            case INT_TWODIM_ARRAY:
+                printer.print(buffer);
+                break;
+            case INT_MULTI_ARRAY:
+                printer.print(buffer);
+                break;
+            default:
         }
-
+        buffer = "";
     }
 
     /**

@@ -8,6 +8,7 @@ import com.acme.edu.exceptions.PrinterException;
  */
 public abstract class LoggerState implements Closeable {
 
+
     protected static final String SEP = System.lineSeparator();
 
     /**
@@ -19,12 +20,13 @@ public abstract class LoggerState implements Closeable {
      * We gonna use console printer to write to console
      */
     protected Printable printer = new ConsolePrinter();
+    protected int format;
 
     /**
      * Call this if state is changed or if close() method was called
      * to clear buffer and other fields on LoggerState realization classes
      */
-    protected void flush() throws PrinterException{
+    protected void flush() throws PrinterException {
         printer.print(buffer);
         buffer = "";
     }
@@ -32,7 +34,7 @@ public abstract class LoggerState implements Closeable {
     /**
      * Adds new message to buffer.
      */
-    protected void writeToBuffer(String string) {
+    protected void writeToBuffer(String string) throws PrinterException{
         buffer += "primitive: " + string + SEP;
     }
 
@@ -41,6 +43,20 @@ public abstract class LoggerState implements Closeable {
      * @param format
      */
     protected void setFormat(int format) {
+        this.format = format;
+    }
+
+    /**
+     * I call this in the beginning of any log() method
+     * to change state , flush  buffer and
+     * then set new state and new format
+     */
+    protected LoggerState switchToNewState(LoggerState newState, int format) throws PrinterException {
+        if (!(this == newState) && !this.buffer.equals("")) {
+            this.flush();
+        }
+        newState.setFormat(format);
+        return newState;
     }
 
     /**

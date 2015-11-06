@@ -7,11 +7,10 @@ import com.acme.edu.exceptions.PrinterException;
  */
 public class StringLoggerState extends LoggerState {
 
-
     private int stringCounter = 1;
 
     @Override
-    protected void writeToBuffer(String string) {
+    protected void writeToBuffer(String string) throws PrinterException {
         if (buffer.equals(string)) {
             stringCounter++;
         } else {
@@ -23,18 +22,14 @@ public class StringLoggerState extends LoggerState {
     }
 
     @Override
-    public void flush() {
+    public void flush() throws PrinterException {
 
-        try {
-            if (stringCounter > 1) {
-                printer.print("string: " + buffer + " (x" + stringCounter + ")" + SEP);
-            } else {
-                printer.print("string: " + buffer + SEP);
-            }
-            buffer = "";
-            stringCounter = 1;
-        } catch (PrinterException e) {
-            System.out.println("Exception while String buffer flushing " + e.getCause());
+        if (stringCounter > 1) {
+            printer.print("string: " + buffer + " (x" + stringCounter + ")" + SEP);
+        } else {
+            printer.print("string: " + buffer + SEP);
         }
+        buffer = "";
+        stringCounter = 1;
     }
 }

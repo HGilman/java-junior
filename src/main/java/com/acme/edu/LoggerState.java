@@ -1,13 +1,15 @@
 package com.acme.edu;
 
 import com.acme.edu.exceptions.PrinterException;
+import com.acme.edu.printers.Printer;
+
+import java.io.IOException;
 
 
 /**
  *
  */
 public abstract class LoggerState implements Closeable {
-
 
     protected static final String SEP = System.lineSeparator();
 
@@ -16,25 +18,26 @@ public abstract class LoggerState implements Closeable {
      */
     protected String buffer = "";
 
-    /**
-     * We gonna use console printer to write to console
-     */
-    protected Printable printer = new ConsolePrinter();
+    protected static Printer[] printers;
     protected int format;
+
+    protected static void setUpPrinters(Printer[] printersArg) {
+         printers = printersArg;
+    }
 
     /**
      * Call this if state is changed or if close() method was called
      * to clear buffer and other fields on LoggerState realization classes
      */
-    protected void flush() throws PrinterException {
-        printer.print(buffer);
+    protected void flush() throws IOException {
+        printAllPrinters(buffer);
         buffer = "";
     }
 
     /**
      * Adds new message to buffer.
      */
-    protected void writeToBuffer(String string) throws PrinterException{
+    protected void writeToBuffer(String string) throws IOException{
         buffer += "primitive: " + string + SEP;
     }
 
@@ -51,7 +54,8 @@ public abstract class LoggerState implements Closeable {
      * to change state , flush  buffer and
      * then set new state and new format
      */
-    protected LoggerState switchToNewState(LoggerState newState, int format) throws PrinterException {
+    protected LoggerState switchToNewState(LoggerState newState, int format) throws
+                                                                IOException {
         if (!(this == newState) && !this.buffer.equals("")) {
             this.flush();
         }
@@ -64,8 +68,15 @@ public abstract class LoggerState implements Closeable {
      * @throws PrinterException in case of problems while writing messages
      */
     @Override
-    public void close() throws PrinterException {
+    public void close() throws  IOException{
         flush();
     }
+
+    public void printAllPrinters (String s) throws IOException {
+        for (Printer p : printers) {
+            p.print(s);
+        }
+    }
+
 
 }

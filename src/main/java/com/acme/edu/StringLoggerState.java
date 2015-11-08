@@ -1,6 +1,7 @@
 package com.acme.edu;
 
-import com.acme.edu.exceptions.PrinterException;
+
+import java.io.IOException;
 
 /**
  * Created by Khasan on 03.11.2015.
@@ -10,7 +11,7 @@ public class StringLoggerState extends LoggerState {
     private int stringCounter = 1;
 
     @Override
-    protected void writeToBuffer(String string) throws PrinterException {
+    protected void writeToBuffer(String string) throws IOException {
         if (buffer.equals(string)) {
             stringCounter++;
         } else {
@@ -22,12 +23,12 @@ public class StringLoggerState extends LoggerState {
     }
 
     @Override
-    public void flush() throws PrinterException {
+    public void flush() throws IOException {
 
         if (stringCounter > 1) {
-            printer.print("string: " + buffer + " (x" + stringCounter + ")" + SEP);
+            printAllPrinters("string: " + buffer + " (x" + stringCounter + ")" + SEP);
         } else {
-            printer.print("string: " + buffer + SEP);
+            printAllPrinters("string: " + buffer + SEP);
         }
         buffer = "";
         stringCounter = 1;

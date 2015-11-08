@@ -2,6 +2,9 @@ package com.acme.edu;
 
 
 import com.acme.edu.exceptions.PrinterException;
+import com.acme.edu.printers.Printer;
+
+import java.io.IOException;
 
 /**
  * Created by Khasan on 03.11.2015.
@@ -23,21 +26,21 @@ public class IntLoggerState extends LoggerState  {
 
 
     @Override
-    public void flush() throws PrinterException {
+    public void flush() throws IOException {
         switch (format) {
             case INT:
                 if (!(checkIfOverInteger())) {
-                    printer.print("primitive: " + sum + SEP);
+                    printAllPrinters("primitive: " + sum + SEP);
                 } else {
-                    printer.print(buffer);
+                    printAllPrinters(buffer);
                 }
                 sum = 0;
                 break;
             case INT_TWODIM_ARRAY:
-                printer.print(buffer);
+                printAllPrinters(buffer);
                 break;
             case INT_MULTI_ARRAY:
-                printer.print(buffer);
+               printAllPrinters(buffer);
                 break;
             default:
         }
@@ -71,6 +74,7 @@ public class IntLoggerState extends LoggerState  {
     private boolean checkIfOverInteger(){
         return (sum > Integer.MAX_VALUE) ? true : false;
     }
+
 
 
 }

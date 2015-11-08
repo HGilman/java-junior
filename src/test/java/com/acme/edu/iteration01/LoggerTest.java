@@ -1,8 +1,11 @@
 package com.acme.edu.iteration01;
 
 import com.acme.edu.Logger;
+import com.acme.edu.RemotePrinter;
 import com.acme.edu.SysoutCaptureAndAssertionAbility;
 import com.acme.edu.exceptions.LoggerException;
+import com.acme.edu.printers.ConsolePrinter;
+import com.acme.edu.printers.FilePrinter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,8 +25,10 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
     }
 
     @Before
-    public void createLogger() {
-        logger = new Logger();
+    public void setLogger() {
+        logger = new Logger(new ConsolePrinter(),
+                            new FilePrinter("log.txt", "UTF-8"),
+                            new RemotePrinter("serverLog.txt", "UTF-8"));
     }
     //endregion
 

@@ -1,7 +1,9 @@
 package com.acme.edu;
 
 import com.acme.edu.exceptions.LoggerException;
-import com.acme.edu.exceptions.PrinterException;
+import com.acme.edu.printers.Printer;
+
+import java.io.IOException;
 
 /**
  * This class prints in console  information about
@@ -11,12 +13,14 @@ public class Logger implements Closeable {
 
     private final static LoggerState INT_STATE = new IntLoggerState();
     private final static LoggerState STRING_STATE = new StringLoggerState();
-    private final static LoggerState BOOLEAN_STATE = new BooleanLoggerState();
-    private final static LoggerState CHAR_STATE = new CharLoggerState();
-    private final static LoggerState OBJECT_STATE = new ObjectLoggerState();
+    private final static LoggerState NO_BUFFER_STATE = new NoBufferState();
 
     public static final String SEP = System.lineSeparator();
-    private static  LoggerState state = new CharLoggerState();
+    private static  LoggerState state = new NoBufferState();
+
+    public Logger (Printer... varArgPrinter) {
+           LoggerState.setUpPrinters(varArgPrinter);
+    }
 
     /**
      * Prints in console sum of arguments, if we call
@@ -29,7 +33,7 @@ public class Logger implements Closeable {
         try {
             state = state.switchToNewState(INT_STATE, IntLoggerState.INT);
             state.writeToBuffer(i + "");
-        } catch (PrinterException e) {
+        } catch (IOException e) {
             throw new LoggerException("problem in log(int i)" , e);
         }
     }
@@ -44,7 +48,7 @@ public class Logger implements Closeable {
             for (int i : varArgArray) {
                 state.writeToBuffer(i + "");
             }
-        } catch (PrinterException e) {
+        } catch (IOException e) {
             throw new LoggerException("problem in log(int... varArg)", e);
         }
     }
@@ -61,7 +65,7 @@ public class Logger implements Closeable {
         try {
             state = state.switchToNewState(INT_STATE, IntLoggerState.INT_TWODIM_ARRAY);
             state.writeToBuffer(toStringIntTwoDimArray(twoDimArray));
-        } catch (PrinterException e) {
+        } catch (IOException e) {
           throw new LoggerException("problem in log(int[][]) method", e);
         }
     }
@@ -83,7 +87,7 @@ public class Logger implements Closeable {
             message += "}" + SEP;
 
             state.writeToBuffer(message);
-        } catch (PrinterException e) {
+        } catch (IOException e) {
             throw new LoggerException("problem in log(multiArray)", e);
         }
     }
@@ -94,9 +98,9 @@ public class Logger implements Closeable {
      */
     public void log(char ch) throws LoggerException {
         try {
-            state = state.switchToNewState(CHAR_STATE, -1);
+            state = state.switchToNewState(NO_BUFFER_STATE, NoBufferState.CHAR_STATE);
             state.writeToBuffer(ch + "");
-        } catch (PrinterException e) {
+        } catch (IOException e) {
             throw new LoggerException("problem in log(char)", e);
         }
     }
@@ -107,9 +111,9 @@ public class Logger implements Closeable {
      */
     public void log(boolean bool) throws LoggerException {
         try {
-            state = state.switchToNewState(BOOLEAN_STATE, -1);
+            state = state.switchToNewState(NO_BUFFER_STATE, NoBufferState.BOOLEAN_STATE);
             state.writeToBuffer(bool + "");
-        } catch (PrinterException e) {
+        } catch (IOException e) {
             throw new LoggerException("problem in log(bool)", e);
         }
     }
@@ -125,7 +129,7 @@ public class Logger implements Closeable {
         try {
             state = state.switchToNewState(STRING_STATE, -1);
             state.writeToBuffer(string);
-        } catch (PrinterException e) {
+        } catch (IOException e) {
             throw new LoggerException("problem in log(string)", e);
         }
     }
@@ -140,7 +144,7 @@ public class Logger implements Closeable {
         try {
             state = state.switchToNewState(STRING_STATE, -1);
             state.writeToBuffer(toStringStringArray(stringArray));
-        } catch (PrinterException e) {
+        } catch (IOException e) {
           throw new LoggerException("problem log(String...)", e);
         }
     }
@@ -151,9 +155,9 @@ public class Logger implements Closeable {
      */
     public void log(Object object) throws LoggerException{
         try {
-            state = state.switchToNewState(OBJECT_STATE, -1);
+            state = state.switchToNewState(NO_BUFFER_STATE, NoBufferState.OBJECT_STATE);
             state.writeToBuffer(object + "");
-        } catch (PrinterException e) {
+        } catch (IOException e) {
             throw new LoggerException("problem in log(object", e);
         }
     }
@@ -173,7 +177,7 @@ public class Logger implements Closeable {
     public void close() throws LoggerException {
         try {
             state.close();
-        } catch (PrinterException e) {
+        } catch (IOException e) {
             throw new LoggerException("problem while writing log message in close() method", e);
         }
     }

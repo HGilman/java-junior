@@ -1,7 +1,7 @@
 package com.acme.edu.iteration02;
 
 import com.acme.edu.Logger;
-import com.acme.edu.RemotePrinter;
+import com.acme.edu.printers.RemotePrinter;
 import com.acme.edu.SysoutCaptureAndAssertionAbility;
 import com.acme.edu.exceptions.LoggerException;
 import com.acme.edu.printers.ConsolePrinter;

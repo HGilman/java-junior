@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * This class is reliable for output logging messages to console
  */
-public class ConsolePrinter extends Printer{
+public class ConsolePrinter extends Printer {
 
     /**
      * Prints message to console

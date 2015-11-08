@@ -2,6 +2,7 @@ package com.acme.edu;
 
 import com.acme.edu.exceptions.LoggerException;
 import com.acme.edu.printers.Printer;
+import com.acme.edu.states.*;
 
 import java.io.IOException;
 
@@ -9,17 +10,23 @@ import java.io.IOException;
  * This class prints in console  information about
  * what is happening in whole project
  */
-public class Logger implements Closeable {
+public class Logger {
 
-    private final static LoggerState INT_STATE = new IntLoggerState();
-    private final static LoggerState STRING_STATE = new StringLoggerState();
-    private final static LoggerState NO_BUFFER_STATE = new NoBufferState();
+    private final static String BOOLEAN_DECOR = "primitive: ";
+    private final static String CHAR_DECOR = "char: ";
+    private final static String OBJECT_DECOR = "reference: ";
+    public final static String INT_DECOR = "primitive: ";
+    public final static String TWODIM_INT_DECOR = "primitives matrix: ";
+    public final static String MULTIDIM_INT_DECOR = "primitives multimatrix: ";
+    private final static String STRING_DECOR = "string: ";
+
 
     public static final String SEP = System.lineSeparator();
-    private static  LoggerState state = new NoBufferState();
+    private LoggerState state = null;
 
     public Logger (Printer... varArgPrinter) {
-           LoggerState.setUpPrinters(varArgPrinter);
+        LoggerState.setUpPrinters(varArgPrinter);
+        state = new OtherState(BOOLEAN_DECOR, "");
     }
 
     /**
@@ -31,7 +38,7 @@ public class Logger implements Closeable {
      */
     public void log(int i) throws LoggerException {
         try {
-            state = state.switchToNewState(INT_STATE, IntLoggerState.INT);
+            state = state.switchToNewState(new IntLoggerState(INT_DECOR, ""));
             state.writeToBuffer(i + "");
         } catch (IOException e) {
             throw new LoggerException("problem in log(int i)" , e);
@@ -44,7 +51,7 @@ public class Logger implements Closeable {
      */
     public void log(int... varArgArray) throws LoggerException {
         try {
-            state = state.switchToNewState(INT_STATE, IntLoggerState.INT);
+            state = state.switchToNewState(new IntLoggerState(INT_DECOR, ""));
             for (int i : varArgArray) {
                 state.writeToBuffer(i + "");
             }
@@ -63,7 +70,7 @@ public class Logger implements Closeable {
      */
     public void log(int[][] twoDimArray) throws LoggerException {
         try {
-            state = state.switchToNewState(INT_STATE, IntLoggerState.INT_TWODIM_ARRAY);
+            state = state.switchToNewState(new IntLoggerState(TWODIM_INT_DECOR, ""));
             state.writeToBuffer(toStringIntTwoDimArray(twoDimArray));
         } catch (IOException e) {
           throw new LoggerException("problem in log(int[][]) method", e);
@@ -75,7 +82,7 @@ public class Logger implements Closeable {
      */
     public void log (int [][][][] multiArray) throws LoggerException {
         try {
-            state = state.switchToNewState(INT_STATE, IntLoggerState.INT_MULTI_ARRAY);
+            state = state.switchToNewState(new IntLoggerState(MULTIDIM_INT_DECOR, ""));
             String message = "{" + SEP;
             for (int i = 0; i < multiArray.length; i++) {
                 message += "{" + SEP;
@@ -98,7 +105,7 @@ public class Logger implements Closeable {
      */
     public void log(char ch) throws LoggerException {
         try {
-            state = state.switchToNewState(NO_BUFFER_STATE, NoBufferState.CHAR_STATE);
+            state = state.switchToNewState(new OtherState(CHAR_DECOR, ""));
             state.writeToBuffer(ch + "");
         } catch (IOException e) {
             throw new LoggerException("problem in log(char)", e);
@@ -111,10 +118,23 @@ public class Logger implements Closeable {
      */
     public void log(boolean bool) throws LoggerException {
         try {
-            state = state.switchToNewState(NO_BUFFER_STATE, NoBufferState.BOOLEAN_STATE);
+            state = state.switchToNewState(new OtherState(BOOLEAN_DECOR, ""));
             state.writeToBuffer(bool + "");
         } catch (IOException e) {
             throw new LoggerException("problem in log(bool)", e);
+        }
+    }
+
+    /**
+     * Prints to console like this:
+     * "reference: " + "objectArg.toString()"
+     */
+    public void log(Object object) throws LoggerException{
+        try {
+            state = state.switchToNewState(new OtherState(OBJECT_DECOR, ""));
+            state.writeToBuffer(object + "");
+        } catch (IOException e) {
+            throw new LoggerException("problem in log(object)", e);
         }
     }
 
@@ -127,7 +147,7 @@ public class Logger implements Closeable {
      */
     public void log(String string) throws LoggerException {
         try {
-            state = state.switchToNewState(STRING_STATE, -1);
+            state = state.switchToNewState(new StringLoggerState(STRING_DECOR, ""));
             state.writeToBuffer(string);
         } catch (IOException e) {
             throw new LoggerException("problem in log(string)", e);
@@ -142,23 +162,10 @@ public class Logger implements Closeable {
      */
     public void log(String... stringArray) throws LoggerException {
         try {
-            state = state.switchToNewState(STRING_STATE, -1);
+            state = state.switchToNewState(new StringLoggerState(STRING_DECOR, ""));
             state.writeToBuffer(toStringStringArray(stringArray));
         } catch (IOException e) {
           throw new LoggerException("problem log(String...)", e);
-        }
-    }
-
-    /**
-     * Prints to console like this:
-     * "reference: " + "objectArg.toString()"
-     */
-    public void log(Object object) throws LoggerException{
-        try {
-            state = state.switchToNewState(NO_BUFFER_STATE, NoBufferState.OBJECT_STATE);
-            state.writeToBuffer(object + "");
-        } catch (IOException e) {
-            throw new LoggerException("problem in log(object", e);
         }
     }
 
@@ -173,7 +180,6 @@ public class Logger implements Closeable {
      * ......
      * logger.close(); -> that is where close method stay
      */
-    @Override
     public void close() throws LoggerException {
         try {
             state.close();

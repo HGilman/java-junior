@@ -7,7 +7,7 @@ import java.nio.charset.Charset;
 /**
  * Class writes messages to file
  */
-public class FilePrinter extends Printer{
+public class FilePrinter extends Printer {
 
     private String fileName;
     private String charset;
@@ -20,15 +20,10 @@ public class FilePrinter extends Printer{
 
     @Override
     public void print(String message) throws IOException {
-
-        File f = new File(fileName);
-        if(f.exists() && !f.isDirectory()) {
-            // do something
-        }
         try (
             BufferedWriter bufferedWriter = new BufferedWriter(
                                                 new OutputStreamWriter(
-                                                        new FileOutputStream(f, true), Charset.forName(charset)))
+                                                        new FileOutputStream(fileName, true), Charset.forName(charset)))
         ){
             bufferedWriter.write(message);
         } catch (IOException e) {

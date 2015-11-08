@@ -1,4 +1,4 @@
-package com.acme.edu;
+package com.acme.edu.states;
 
 
 import java.io.IOException;
@@ -10,8 +10,12 @@ public class StringLoggerState extends LoggerState {
 
     private int stringCounter = 1;
 
+    public StringLoggerState(String prefixDecor, String postfixDecor) {
+        super(prefixDecor, postfixDecor);
+    }
+
     @Override
-    protected void writeToBuffer(String string) throws IOException {
+    public void writeToBuffer(String string) throws IOException {
         if (buffer.equals(string)) {
             stringCounter++;
         } else {
@@ -26,9 +30,9 @@ public class StringLoggerState extends LoggerState {
     public void flush() throws IOException {
 
         if (stringCounter > 1) {
-            printAllPrinters("string: " + buffer + " (x" + stringCounter + ")" + SEP);
+            printAllPrinters(prefixDecor + buffer + " (x" + stringCounter + ")" + SEP + posfixDecor);
         } else {
-            printAllPrinters("string: " + buffer + SEP);
+            printAllPrinters(prefixDecor + buffer + SEP + posfixDecor);
         }
         buffer = "";
         stringCounter = 1;

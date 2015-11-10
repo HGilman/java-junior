@@ -5,11 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito.*;
 
-
-/**
- * Created by Khasan on 05.11.2015.
- */
-
 public class MyLoggerTest {
 
     private Logger logger;
@@ -23,7 +18,6 @@ public class MyLoggerTest {
 
     @Test
     public void shouldLogMethodCountSameStrings() {
-
     }
 
 }

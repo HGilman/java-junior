@@ -21,6 +21,6 @@ public class OtherState extends LoggerState {
 
     @Override
     public void writeToBuffer(String string) throws IOException {
-        buffer += prefixDecor + string + posfixDecor;
+        buffer += prefixDecor + string + posfixDecor + LoggerState.SEP;
     }
 }

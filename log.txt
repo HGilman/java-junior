@@ -1,0 +1,45 @@
+primitive: 0
+reference: java.lang.Object@58d25a40
+primitive: 0
+char: a
+char: b
+primitive: true
+primitive: false
+string: test string 1
+string: other str
+primitive: 0
+reference: java.lang.Object@58d25a40
+primitive: 0
+char: a
+char: b
+primitive: true
+primitive: false
+string: test string 1
+string: other str
+primitive: 0
+reference: java.lang.Object@1055e4af
+primitive: 0
+char: a
+char: b
+primitive: true
+primitive: false
+string: test string 1
+string: other str
+primitive: 0
+reference: java.lang.Object@58d25a40
+primitive: 0
+char: a
+char: b
+primitive: true
+primitive: false
+string: test string 1
+string: other str
+primitive: 0
+reference: java.lang.Object@58d25a40
+primitive: 0
+char: a
+char: b
+primitive: true
+primitive: false
+string: test string 1
+string: other str

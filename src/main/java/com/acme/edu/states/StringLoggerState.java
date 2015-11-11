@@ -30,9 +30,9 @@ public class StringLoggerState extends LoggerState {
     public void flush() throws IOException {
 
         if (stringCounter > 1) {
-            printAllPrinters(prefixDecor + buffer + " (x" + stringCounter + ")" + SEP + posfixDecor);
+            printAllPrinters(prefixDecor + buffer + " (x" + stringCounter + ")" + posfixDecor + SEP );
         } else {
-            printAllPrinters(prefixDecor + buffer + SEP + posfixDecor);
+            printAllPrinters(prefixDecor + buffer  + posfixDecor + SEP);
         }
         buffer = "";
         stringCounter = 1;

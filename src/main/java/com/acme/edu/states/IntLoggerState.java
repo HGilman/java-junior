@@ -22,11 +22,11 @@ public class IntLoggerState extends LoggerState {
     public void flush() throws IOException {
 
         if (prefixDecor == Logger.INT_DECOR && !(checkIfOverInteger())) {
-            printAllPrinters(prefixDecor + sum + SEP + posfixDecor);
+            printAllPrinters(prefixDecor + sum  + posfixDecor + SEP);
         } else if (prefixDecor == Logger.INT_DECOR) {
             printAllPrinters(buffer);
         } else {
-            printAllPrinters(prefixDecor + buffer + posfixDecor);
+            printAllPrinters(prefixDecor + buffer + posfixDecor + SEP);
         }
         sum = 0;
         buffer = "";

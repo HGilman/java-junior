@@ -3,8 +3,10 @@ package com.acme.edu.printers;
 import com.acme.edu.exceptions.PrinterException;
 import com.acme.edu.printers.Printer;
 
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 /**
@@ -12,30 +14,28 @@ import java.net.Socket;
  */
 public class RemotePrinter extends Printer {
 
-    private String charset;
-    private String remoteFileName;
     private String ipAddress;
     private int port;
-    private DataOutputStream os;
+    private BufferedWriter os;
     private Socket socket;
 
-    public RemotePrinter(String remoteFileName, String charset, String ipAddress, int port) {
-        this.remoteFileName = remoteFileName;
-        this.charset = charset;
+    public RemotePrinter(String ipAddress, int port) {
         this.ipAddress = ipAddress;
         this.port = port;
-        makeClient();
     }
 
     @Override
     public void print(String message) throws  IOException {
-        os.writeUTF(message);
+        makeClient();
+        os.write(message);
+        os.flush();
+        os.close();
     }
 
     private void makeClient() {
         try {
             socket = new Socket(ipAddress, port);
-            os = new DataOutputStream(socket.getOutputStream());
+            os = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         } catch (IOException e) {
             e.printStackTrace();
         }

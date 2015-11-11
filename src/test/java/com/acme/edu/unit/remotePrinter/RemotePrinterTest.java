@@ -29,7 +29,7 @@ public class RemotePrinterTest  {
         } catch (IOException e) {
             System.out.println("problem while executing server!");
         }
-        logger = new Logger(new RemotePrinter("serverLog.txt", "UTF-8", ipAddress, PORT));
+        logger = new Logger(new RemotePrinter(ipAddress, PORT));
     }
 
     @After

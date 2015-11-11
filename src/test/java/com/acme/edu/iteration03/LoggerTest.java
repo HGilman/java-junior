@@ -33,7 +33,7 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
     public void setLogger() {
         logger = new Logger(new ConsolePrinter(),
                 new FilePrinter("log.txt", "UTF-8"),
-                new RemotePrinter("serverLog.txt", "UTF-8","127.0.0.1", 1));
+                new RemotePrinter("127.0.0.1", 1));
     }
     //endregion
 

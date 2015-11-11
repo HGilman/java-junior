@@ -1,6 +1,7 @@
 package com.acme.edu.iteration01;
 
 import com.acme.edu.Logger;
+import com.acme.edu.Server;
 import com.acme.edu.SysoutCaptureAndAssertionAbility;
 import com.acme.edu.printers.RemotePrinter;
 import com.acme.edu.exceptions.LoggerException;
@@ -12,11 +13,22 @@ import org.junit.Test;
 
 import java.io.*;
 
+
 public class LoggerTest implements SysoutCaptureAndAssertionAbility {
 
     private static final String SEP = System.lineSeparator();
-    private static Logger logger = null;
+    private static  int PORT;
+    private Server server;
+    private Logger logger;
 
+    public LoggerTest() {
+        server = new Server("serverLog.txt");
+        server.start();
+        PORT = server.getPort();
+        logger = new Logger(new ConsolePrinter(),
+                    new FilePrinter("log.txt", "UTF-8"),
+                        new RemotePrinter("127.0.0.1", PORT));
+    }
     //region given
     @Before
     public void setUpSystemOut() throws IOException {
@@ -24,12 +36,6 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
         captureSysout();
     }
 
-    @Before
-    public void setLogger() {
-        logger = new Logger(new ConsolePrinter(),
-                            new FilePrinter("log.txt", "UTF-8"),
-                            new RemotePrinter("serverLog.txt", "UTF-8","127.0.0.1", 1));
-    }
     //endregion
 
     @After
